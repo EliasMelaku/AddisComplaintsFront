@@ -47,6 +47,7 @@ const Login = () => {
         .post("/auth/login", data)
         .then((res) => {
           localStorage.setItem("name", res.data.name);
+          localStorage.setItem("email", res.data.email);
           // localStorage.setItem("signIn_token", res.data.signIn_token);
           setLoginStatus(true);
           navigate("/dashboard");

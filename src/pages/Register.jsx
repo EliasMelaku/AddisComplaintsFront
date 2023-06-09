@@ -51,6 +51,8 @@ const Register = () => {
             progress: undefined,
             theme: "colored",
           });
+          localStorage.setItem("name", res.data.name);
+          localStorage.setItem("email", res.data.email);
           navigate("/dashboard");
         })
         .catch((err) =>

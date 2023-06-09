@@ -10,21 +10,34 @@ import Header from "./Header";
 import axios from "axios";
 // import data from "../pages/Dashboard";
 
-const data = [
-  {
-    id: 1,
-    name: "John Doe",
-    email: "sample@gmail.com",
-    title: "Some Title",
-    comment:
-      "lorem ipsum lorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum",
-  },
-];
+const data = {
+  id: 1,
+  name: "John Doe",
+  email: "sample@gmail.com",
+  title: "Some Title",
+  comment:
+    "lorem ipsum lorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum",
+};
 
-const FeedbackForm = ({ edit }) => {
+const FeedbackForm = ({ edit, id }) => {
   const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState("");
   const [selectedFileFile, setSelectedFileFile] = useState();
+
+  // const [data, setData] = useState({});
+
+  // useEffect(() => {
+  //   if (edit === true) {
+  //     const body = {
+  //       id: id,
+  //     };
+
+  //     axios
+  //       .post("/feedback/single", body)
+  //       .then((response) => setData(response.data))
+  //       .catch((err) => console.log(err));
+  //   }
+  // }, []);
 
   const [comment, setComment] = useState("");
 
@@ -130,7 +143,7 @@ const FeedbackForm = ({ edit }) => {
               id="email"
               name="email"
               placeholder="example@gmail.com"
-              value={data[0].email}
+              value={localStorage.getItem("email")}
               disabled={true}
             />
             <label htmlFor="title">Title: </label>
@@ -139,7 +152,7 @@ const FeedbackForm = ({ edit }) => {
               id="title"
               name="title"
               placeholder="Short Title Describing the comment"
-              defaultValue={edit === true ? data[0].title : ""}
+              defaultValue={edit === true ? data.title : ""}
             />
             <label htmlFor="comment">Comment: </label>
             <textarea
@@ -148,7 +161,7 @@ const FeedbackForm = ({ edit }) => {
               id="comment"
               cols="30"
               rows="10"
-              defaultValue={edit === true ? data[0].comment : ""}
+              defaultValue={edit === true ? data.comment : ""}
               disabled={selectedFile}
               onChange={(event) => {
                 setComment(event.target.value);
@@ -156,7 +169,7 @@ const FeedbackForm = ({ edit }) => {
             ></textarea>
             <input
               type="button"
-              value="Submit Feeback"
+              value={edit === true ? "Edit Feedback" : "Submit Feedback"}
               className="submitBtn"
               onClick={() => {
                 submitFeedback();

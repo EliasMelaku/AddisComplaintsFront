@@ -1,26 +1,27 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Header from "../components/Header";
 import { LoginContext } from "../LoginContext";
+import axios from "axios";
 
-const data = [
-  {
-    id: 1,
-    title: "Some Title",
-    comment:
-      "lorem ipsum lorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum",
-    pdf: "Link To Pdf",
-  },
-  {
-    id: 2,
-    title: "Some Title 2",
-    comment:
-      "lorem ipsum lorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum",
-    pdf: null,
-  },
-];
+// const data = [
+//   {
+//     id: 1,
+//     title: "Some Title",
+//     comment:
+//       "lorem ipsum lorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum",
+//     pdf: "Link To Pdf",
+//   },
+//   {
+//     id: 2,
+//     title: "Some Title 2",
+//     comment:
+//       "lorem ipsum lorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum",
+//     pdf: null,
+//   },
+// ];
 
 const Dashboard = () => {
   const alertError = (message) => {
@@ -39,17 +40,32 @@ const Dashboard = () => {
 
   const navigate = useNavigate();
 
-  const [loginStatus, setLoginStatus] = useContext(LoginContext);
+  const [data, setData] = useState([]);
+
+  const [LoginStatus, setLoginStatus] = useContext(LoginContext);
+  // const [loggedInUser, setLoggedInUser] = useState("");
 
   useEffect(() => {
-    if (loginStatus === true) {
+    if (LoginStatus === true) {
       getFeedback();
     } else {
       alertError("You need to Login");
     }
-  }, [loginStatus]);
+  }, []);
 
-  const getFeedback = () => {};
+  const body = {
+    name: localStorage.getItem("name"),
+    email: localStorage.getItem("email"),
+  };
+
+  const getFeedback = () => {
+    axios
+      .post("/feedback", body)
+      .then((response) => {
+        setData(response.data);
+      })
+      .catch((err) => console.log(err));
+  };
 
   const handleDelete = () => {
     toast.error("Feedback Deleted", {
@@ -68,7 +84,7 @@ const Dashboard = () => {
     <div className="background authBackground">
       <Header />
       <div className="userSection">
-        <p>Hi, {localStorage.getItem("name").split(" ")[0]}</p>
+        <p>Hi, {localStorage.getItem("name")}</p>
         <input
           type="submit"
           value="+ Submit Feedback"
