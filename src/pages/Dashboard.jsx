@@ -24,35 +24,12 @@ import axios from "axios";
 // ];
 
 const Dashboard = () => {
-  const alertError = (message) => {
-    toast.error(message, {
-      position: "top-center",
-      autoClose: false,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-    });
-    navigate("/login");
-  };
-
   const navigate = useNavigate();
 
   const [data, setData] = useState([]);
 
-  const [LoginStatus, setLoginStatus] = useContext(LoginContext);
   // const [loggedInUser, setLoggedInUser] = useState("");
   const [somethingDeleted, setSomethingDeleted] = useState(false);
-
-  useEffect(() => {
-    if (LoginStatus === true) {
-      getFeedback();
-    } else {
-      alertError("You need to Login");
-    }
-  }, [somethingDeleted]);
 
   const body = {
     name: localStorage.getItem("name"),
@@ -68,23 +45,21 @@ const Dashboard = () => {
       .catch((err) => console.log(err));
   };
 
-  const handleDelete = (id) => {
-    axios
-      .delete(`/feedback/delete/${id}`)
-      .then((response) => {
-        toast.warning("Feedback Deleted", {
-          position: "top-center",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
-        setSomethingDeleted(!somethingDeleted);
-      })
-      .catch((err) => console.log(err));
+  useEffect(() => {
+    getFeedback();
+  }, []);
+
+  const handleDelete = () => {
+    toast.error("Feedback Deleted", {
+      position: "top-center",
+      autoClose: 2500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
   };
 
   let whatToRender;

@@ -15,11 +15,11 @@ import { LoginContext } from "../LoginContext";
 const Login = () => {
   useEffect(() => {
     localStorage.clear();
-    setLoginStatus(false);
+    setUser(null);
   }, []);
 
   const navigate = useNavigate();
-  const [loginStatus, setLoginStatus] = useContext(LoginContext);
+  const [user, setUser] = useContext(LoginContext);
 
   const captchaRef = useRef(null);
 
@@ -46,11 +46,12 @@ const Login = () => {
       axios
         .post("/auth/login", data)
         .then((res) => {
-          localStorage.setItem("name", res.data.name);
-          localStorage.setItem("email", res.data.email);
-          // localStorage.setItem("signIn_token", res.data.signIn_token);
-          setLoginStatus(true);
-          navigate("/dashboard");
+          setUser(res.data);
+          if (res.data.role === "admin") {
+            navigate("/admin_dashboard");
+          } else {
+            navigate("/dashboard");
+          }
         })
         .catch((err) =>
           toast.error(err.response.data, {

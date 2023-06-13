@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import {
   Login,
   Register,
@@ -9,36 +9,83 @@ import {
 } from "./pages";
 import { ToastContainer, Zoom } from "react-toastify";
 
-import { LoginProvider } from "./LoginContext";
+import { useContext, useEffect } from "react";
+import { LoginContext } from "./LoginContext";
+import GuardedRoute from "./components/GuardedRoute";
 
 function App() {
+  const [user, setUser] = useContext(LoginContext);
+
   return (
     <BrowserRouter>
-      <LoginProvider>
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/admin_dashboard" element={<AdminDashboard />} />
-          <Route path="/feedback" element={<NewFeedback />} />
-          <Route path="/feedback/:id" element={<EditFeedback />} />
-        </Routes>
-
-        <ToastContainer
-          position="top-center"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop={true}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="colored"
-          transition={Zoom}
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <GuardedRoute isAllowed={user !== null} redirectTo="/login" />
+          }
         />
-      </LoginProvider>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route
+          path="/dashboard"
+          element={
+            <GuardedRoute
+              isAllowed={user !== null && user.role === "user"}
+              redirectTo={user === null ? "/login" : "/admin_dashboard"}
+            >
+              <Dashboard />
+            </GuardedRoute>
+          }
+        />
+        <Route
+          path="/admin_dashboard"
+          element={
+            <GuardedRoute
+              isAllowed={user !== null && user.role === "admin"}
+              redirectTo={user === null ? "/login" : "/dashboard"}
+            >
+              <AdminDashboard />
+            </GuardedRoute>
+          }
+        />
+        <Route
+          path="/feedback"
+          element={
+            <GuardedRoute
+              isAllowed={user !== null && user.role === "user"}
+              redirectTo={user === null ? "/login" : "/admin_dashboard"}
+            >
+              <NewFeedback />
+            </GuardedRoute>
+          }
+        />
+        <Route
+          path="/feedback/:id"
+          element={
+            <GuardedRoute
+              isAllowed={user !== null && user.role === "user"}
+              redirectTo={user === null ? "/login" : "/admin_dashboard"}
+            >
+              <EditFeedback />
+            </GuardedRoute>
+          }
+        />
+      </Routes>
+
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+        transition={Zoom}
+      />
     </BrowserRouter>
   );
 }

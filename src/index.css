@@ -166,7 +166,7 @@ textarea:focus {
 .feedbackCard {
   width: 20%;
   height: 11rem;
-  background: rgba(157, 157, 157, 0.33);
+  background: #e3f2fd;
   border-radius: 0.25rem;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(2.5px);
@@ -179,9 +179,7 @@ textarea:focus {
 .feedbackCard::-webkit-scrollbar {
   display: none;
 }
-.feedbackCard:hover {
-  background: rgba(198, 198, 198, 0.33);
-}
+
 .cardTop {
   display: flex;
   flex-direction: row;

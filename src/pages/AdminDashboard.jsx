@@ -1,115 +1,72 @@
-import React, { useState } from "react";
-import Header from "../components/Header";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Header from "../components/Header";
+import { LoginContext } from "../LoginContext";
+import axios from "axios";
+import { Box, Tab, Tabs, Typography } from "@mui/material";
+import UsersTable from "../components/UsersTable";
+import FeedbacksTable from "../components/FeedbacksTable";
 
-const users = [
-  { name: "John", email: "John@email.com" },
-  { name: "John", email: "John@email.com" },
-  { name: "John", email: "John@email.com" },
-  { name: "John", email: "John@email.com" },
-];
-const feedbacks = [
-  {
-    name: "John",
-    email: "John@email.com",
-    title: "Title",
-    comment:
-      "lorem episoum loerm saldkfjasl; fsdidowd aldkow dkorjd lorem pisoum loerm saldkf lorem episoum loerm saldkfjasl; fsdidowd aldkow dkorjd fsdidowd aldkow dkorjd ",
-  },
-  {
-    name: "John",
-    email: "John@email.com",
-    title: "Title",
-    comment: "lorem episoum loerm saldkfjasl; fsdidowd aldkow dkorjd ",
-  },
-  {
-    name: "John",
-    email: "John@email.com",
-    title: "Title",
-    comment: "lorem episoum loerm saldkfjasl; fsdidowd aldkow dkorjd ",
-  },
-];
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`vertical-tabpanel-${index}`}
+      aria-labelledby={`vertical-tab-${index}`}
+      {...other}
+      style={{ width: "100%" }}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
 
 const AdminDashboard = () => {
-  const navigate = useNavigate();
-  const [shown, setShown] = useState(true);
-  // const [tab2, setTab2] = useState("hide");
+  const [value, setValue] = React.useState(0);
 
-  const handleDelete = () => {};
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
   return (
     <div className="background authBackground">
       <Header />
-      <div className="userSection">
-        <p>Hi Admin John</p>
-      </div>
-      <div className="tabbedSection">
-        <div
-          className="tabHeader tabH1"
-          onClick={() => {
-            setShown(true);
-            // setTab2("hide");
+      <div className="dashContainer">
+        <Box
+          sx={{
+            flexGrow: 1,
+            bgcolor: "#eceff1",
+            display: "flex",
+            borderRadius: "10px",
           }}
         >
-          Users
-        </div>
-        <div
-          className="tabHeader tabH2"
-          onClick={() => {
-            setShown(false);
-            // setTab2("show");
-          }}
-        >
-          Feedbacks
-        </div>
-
-        <div className={`tabs tab1 ${shown}`}>
-          <h1>Users</h1>
-          {users.map((user, index) => (
-            <div className="name">{user.name + " " + user.email}</div>
-          ))}
-        </div>
-        <div className={`tabs tab2 ${!shown}`}>
-          <h1>Feedbacks</h1>
-          <div className="adminFeedbacks">
-            {feedbacks.map((feedback, index) => (
-              <div
-                className="feedbackCard"
-                style={{
-                  width: "14rem",
-                  backgroundColor: "rgb(225, 225, 225)",
-                  padding: "1rem",
-                }}
-              >
-                <div className="cardTop">
-                  <h2 className="cardTitle">{feedback.title}</h2>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-evenly",
-                      alignItems: "center",
-                      width: "4rem",
-                    }}
-                  >
-                    <div
-                      className="delete fa fa-trash-can"
-                      onClick={() => {
-                        handleDelete();
-                      }}
-                    ></div>
-                  </div>
-                </div>
-                <p className="cardComment" style={{ fontSize: "0.85rem" }}>
-                  {feedback.comment}
-                </p>
-                <p className="cardPdfLink">
-                  {feedback.pdf || "No Pdf Uploaded"}
-                </p>
-                <p className="cardAuthor">{feedback.name}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+          <Tabs
+            orientation="vertical"
+            variant="scrollable"
+            value={value}
+            onChange={handleChange}
+            aria-label="Vertical tabs example"
+            sx={{ borderRight: 1, borderColor: "divider" }}
+          >
+            <Tab label="Users" />
+            <Tab label="Feedbacks" />
+          </Tabs>
+          <TabPanel value={value} index={0}>
+            <UsersTable />
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            <FeedbacksTable />
+          </TabPanel>
+        </Box>
       </div>
     </div>
   );
