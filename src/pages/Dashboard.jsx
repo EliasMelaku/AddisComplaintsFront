@@ -44,6 +44,7 @@ const Dashboard = () => {
 
   const [LoginStatus, setLoginStatus] = useContext(LoginContext);
   // const [loggedInUser, setLoggedInUser] = useState("");
+  const [somethingDeleted, setSomethingDeleted] = useState(false);
 
   useEffect(() => {
     if (LoginStatus === true) {
@@ -51,7 +52,7 @@ const Dashboard = () => {
     } else {
       alertError("You need to Login");
     }
-  }, []);
+  }, [somethingDeleted]);
 
   const body = {
     name: localStorage.getItem("name"),
@@ -67,18 +68,67 @@ const Dashboard = () => {
       .catch((err) => console.log(err));
   };
 
-  const handleDelete = () => {
-    toast.error("Feedback Deleted", {
-      position: "top-center",
-      autoClose: 2500,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-    });
+  const handleDelete = (id) => {
+    axios
+      .delete(`/feedback/delete/${id}`)
+      .then((response) => {
+        toast.warning("Feedback Deleted", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+        setSomethingDeleted(!somethingDeleted);
+      })
+      .catch((err) => console.log(err));
   };
+
+  let whatToRender;
+
+  if (data.length === 0) {
+    whatToRender = <p>You have no Feedbacks yet</p>;
+  } else {
+    whatToRender = (
+      <>
+        {data.map((feedback, index) => (
+          <div className="feedbackCard">
+            <div className="cardTop">
+              {/* <h2 className="cardTitle">{feedback.title}</h2> */}
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-evenly",
+                  alignItems: "center",
+                  width: "4rem",
+                }}
+              >
+                <i
+                  className="edit fa fa-pen-to-square"
+                  onClick={() => {
+                    navigate(`/feedback/${feedback.id}`);
+                  }}
+                ></i>
+                <div
+                  className="delete fa fa-trash-can"
+                  onClick={() => {
+                    handleDelete(feedback.id);
+                  }}
+                ></div>
+              </div>
+            </div>
+            <p className="cardComment">{feedback.comment}</p>
+            <p className="cardPdfLink">
+              {feedback.pdf.split("~~")[0] || "No Pdf Uploaded"}
+            </p>
+          </div>
+        ))}
+      </>
+    );
+  }
 
   return (
     <div className="background authBackground">
@@ -95,40 +145,7 @@ const Dashboard = () => {
           }}
         />
       </div>
-      <div className="dashContainer">
-        <>
-          {data.map((feedback, index) => (
-            <div className="feedbackCard">
-              <div className="cardTop">
-                {/* <h2 className="cardTitle">{feedback.title}</h2> */}
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-evenly",
-                    alignItems: "center",
-                    width: "4rem",
-                  }}
-                >
-                  <i
-                    className="edit fa fa-pen-to-square"
-                    onClick={() => {
-                      navigate(`/feedback/${feedback.id}`);
-                    }}
-                  ></i>
-                  <div
-                    className="delete fa fa-trash-can"
-                    onClick={() => {
-                      handleDelete();
-                    }}
-                  ></div>
-                </div>
-              </div>
-              <p className="cardComment">{feedback.comment}</p>
-              <p className="cardPdfLink">{feedback.pdf || "No Pdf Uploaded"}</p>
-            </div>
-          ))}
-        </>
-      </div>
+      <div className="dashContainer">{whatToRender}</div>
     </div>
   );
 };

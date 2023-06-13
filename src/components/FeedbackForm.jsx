@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import NewFeedback from "../pages/NewFeedback";
 import EditFeedback from "../pages/EditFeedback";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
@@ -19,28 +19,115 @@ const data = {
     "lorem ipsum lorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum",
 };
 
-const FeedbackForm = ({ edit, id }) => {
+const FeedbackForm = ({ edit }) => {
   const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState("");
   const [selectedFileFile, setSelectedFileFile] = useState();
+  const { id } = useParams();
 
   // const [data, setData] = useState({});
-
-  // useEffect(() => {
-  //   if (edit === true) {
-  //     const body = {
-  //       id: id,
-  //     };
-
-  //     axios
-  //       .post("/feedback/single", body)
-  //       .then((response) => setData(response.data))
-  //       .catch((err) => console.log(err));
-  //   }
-  // }, []);
-
   const [comment, setComment] = useState("");
 
+  useEffect(() => {
+    console.log(id);
+    if (edit === true) {
+      const body = {
+        id: id,
+      };
+
+      axios
+        .post("/feedback/single", body)
+        .then((response) => {
+          // console.log(response.data.comment);
+          setSelectedFile(response.data.pdf);
+          setComment(response.data.comment);
+        })
+        .catch((err) => console.log(err));
+    }
+  }, []);
+
+  const editFeedback = () => {
+    if (comment !== "") {
+      // alert(selectedFile.endsWith(".pdf"));
+      const formData = new FormData();
+      if (selectedFileFile !== undefined) {
+        if (selectedFileFile.type === "application/pdf") {
+          formData.append("pdf", selectedFileFile);
+        } else {
+          toast.error("Wrong File Submitted", {
+            position: "top-center",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        }
+      }
+      formData.append("name", localStorage.getItem("name"));
+      formData.append("email", localStorage.getItem("email"));
+      formData.append("comment", comment);
+      formData.append("id", id);
+      // const formData = new FormData();
+      axios
+        .put(`/feedback/update/`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          toast.success("Feedback Updated", {
+            position: "top-center",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+          navigate("/dashboard");
+        })
+        .catch((err) => console.log(err));
+      for (const value of formData.values()) {
+        // console.log(value);
+      }
+      // toast.success("Feedback Submitted", {
+      //   position: "top-center",
+      //   autoClose: 5000,
+      //   hideProgressBar: false,
+      //   closeOnClick: true,
+      //   pauseOnHover: true,
+      //   draggable: true,
+      //   progress: undefined,
+      //   theme: "colored",
+      // });
+    } else if (comment === "") {
+      toast.error("Comment is required", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    } else {
+      toast.error("File or comment is required", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
+  };
   const submitFeedback = () => {
     if (comment !== "") {
       // alert(selectedFile.endsWith(".pdf"));
@@ -51,7 +138,7 @@ const FeedbackForm = ({ edit, id }) => {
         } else {
           toast.error("Wrong File Submitted", {
             position: "top-center",
-            autoClose: false,
+            autoClose: 1000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
@@ -74,7 +161,7 @@ const FeedbackForm = ({ edit, id }) => {
         .then((res) => {
           toast.success("Feedback Submitted", {
             position: "top-center",
-            autoClose: 5000,
+            autoClose: 1000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
@@ -101,7 +188,7 @@ const FeedbackForm = ({ edit, id }) => {
     } else if (comment === "") {
       toast.error("Comment is required", {
         position: "top-center",
-        autoClose: 5000,
+        autoClose: 1000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -112,7 +199,7 @@ const FeedbackForm = ({ edit, id }) => {
     } else {
       toast.error("File or comment is required", {
         position: "top-center",
-        autoClose: 5000,
+        autoClose: 1000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -173,8 +260,8 @@ const FeedbackForm = ({ edit, id }) => {
               id="comment"
               cols="30"
               rows="10"
-              defaultValue={edit === true ? data.comment : ""}
-              disabled={selectedFile}
+              defaultValue={edit === true ? comment : ""}
+              // disabled={selectedFile}
               onChange={(event) => {
                 setComment(event.target.value);
               }}
@@ -184,7 +271,7 @@ const FeedbackForm = ({ edit, id }) => {
               value={edit === true ? "Edit Feedback" : "Submit Feedback"}
               className="submitBtn"
               onClick={() => {
-                submitFeedback();
+                edit === true ? editFeedback() : submitFeedback();
               }}
             />
           </div>
@@ -220,6 +307,7 @@ const FeedbackForm = ({ edit, id }) => {
                 );
                 setSelectedFileFile(event.target.files[0]);
               }}
+              defaultValue={edit === true ? selectedFile : null}
             />
             {selectedFile || "No File Selected"}
           </div>
