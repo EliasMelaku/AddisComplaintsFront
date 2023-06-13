@@ -31,22 +31,6 @@ function TabPanel(props) {
 }
 
 const AdminDashboard = () => {
-  const alertError = (message) => {
-    toast.error(message, {
-      position: "top-center",
-      autoClose: false,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-    });
-    navigate("/login");
-  };
-
-  const navigate = useNavigate();
-
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {

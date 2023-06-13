@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import NewFeedback from "../pages/NewFeedback";
 import EditFeedback from "../pages/EditFeedback";
@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Header from "./Header";
 import axios from "axios";
+import { LoginContext } from "../LoginContext";
 // import data from "../pages/Dashboard";
 
 const data = {
@@ -23,6 +24,7 @@ const FeedbackForm = ({ edit, id }) => {
   const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState("");
   const [selectedFileFile, setSelectedFileFile] = useState();
+  const [user, _] = useContext(LoginContext);
 
   // const [data, setData] = useState({});
 
@@ -61,8 +63,8 @@ const FeedbackForm = ({ edit, id }) => {
           });
         }
       }
-      formData.append("name", localStorage.getItem("name"));
-      formData.append("email", localStorage.getItem("email"));
+      formData.append("name", user.name);
+      formData.append("email", user.email);
       formData.append("comment", comment);
       // const formData = new FormData();
       axios
@@ -146,7 +148,7 @@ const FeedbackForm = ({ edit, id }) => {
               id="name"
               name="email"
               // placeholder={"John Doe"}
-              value={localStorage.getItem("name")}
+              value={user.name}
               disabled={true}
             />
             <label htmlFor="email">Email: </label>
@@ -155,7 +157,7 @@ const FeedbackForm = ({ edit, id }) => {
               id="email"
               name="email"
               placeholder="example@gmail.com"
-              value={localStorage.getItem("email")}
+              value={user.email}
               disabled={true}
             />
             {/* <label htmlFor="title">Title: </label>

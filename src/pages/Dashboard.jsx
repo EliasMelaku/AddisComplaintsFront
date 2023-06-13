@@ -24,34 +24,11 @@ import axios from "axios";
 // ];
 
 const Dashboard = () => {
-  const alertError = (message) => {
-    toast.error(message, {
-      position: "top-center",
-      autoClose: false,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-    });
-    navigate("/login");
-  };
-
   const navigate = useNavigate();
 
   const [data, setData] = useState([]);
 
-  const [LoginStatus, setLoginStatus] = useContext(LoginContext);
   // const [loggedInUser, setLoggedInUser] = useState("");
-
-  useEffect(() => {
-    if (LoginStatus === true) {
-      getFeedback();
-    } else {
-      alertError("You need to Login");
-    }
-  }, []);
 
   const body = {
     name: localStorage.getItem("name"),
@@ -66,6 +43,10 @@ const Dashboard = () => {
       })
       .catch((err) => console.log(err));
   };
+
+  useEffect(() => {
+    getFeedback();
+  }, []);
 
   const handleDelete = () => {
     toast.error("Feedback Deleted", {
