@@ -7,8 +7,16 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import { Container, Typography, styled } from "@mui/material";
+import {
+  Button,
+  Container,
+  IconButton,
+  Typography,
+  styled,
+} from "@mui/material";
+import BlockIcon from "@mui/icons-material/Block";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const columns = [
   { id: "name", label: "Full Name", minWidth: 170 },
@@ -17,6 +25,15 @@ const columns = [
     id: "role",
     label: "Role",
     minWidth: 100,
+  },
+  {
+    id: "isBanned",
+    label: "Banned",
+    minWidth: 100,
+    format: (value) => (value ? "Yes" : "No"),
+  },
+  {
+    id: "",
   },
 ];
 
@@ -45,16 +62,35 @@ export default function UsersTable() {
     setPage(0);
   };
 
-  React.useEffect(() => {
+  const fetchUsers = () => {
     axios
       .get("/admin/getAllUsers")
       .then((res) => {
+        console.log(res.data);
         setUsers(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
-  });
+  };
+
+  const banUser = (userId) => {
+    axios
+      .put("/admin/banUser/" + userId)
+      .then((res) => {
+        toast.success("User banned successfully", {
+          autoClose: 2000,
+        });
+        fetchUsers();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  React.useEffect(() => {
+    fetchUsers();
+  }, []);
 
   return (
     <Container>
@@ -86,18 +122,23 @@ export default function UsersTable() {
                       hover
                       role="checkbox"
                       tabIndex={-1}
-                      key={row.code}
+                      key={row.id}
                     >
                       {columns.map((column) => {
                         const value = row[column.id];
                         return (
                           <TableCell key={column.id} align={column.align}>
-                            {column.format && typeof value === "number"
-                              ? column.format(value)
-                              : value}
+                            {column.format ? column.format(value) : value}
                           </TableCell>
                         );
                       })}
+                      {!row.isBanned && (
+                        <TableCell>
+                          <IconButton onClick={() => banUser(row.id)}>
+                            <BlockIcon />
+                          </IconButton>
+                        </TableCell>
+                      )}
                     </StyledTableRow>
                   );
                 })}
