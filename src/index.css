@@ -186,7 +186,10 @@ textarea:focus {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-top: -0.5rem;
+  position: absolute;
+  top: 7rem;
+  right: 2rem;
+  /* margin-top: -0.5rem; */
   /* background-color: black; */
 }
 .edit,
@@ -196,6 +199,8 @@ textarea:focus {
   border-radius: 100%;
   cursor: pointer;
   transition: all 0.25s;
+  margin-top: 80%;
+  /* position: absolute; */
 }
 .edit:hover,
 .delete:hover {
@@ -209,7 +214,7 @@ textarea:focus {
 }
 
 .cardComment {
-  margin-top: -0.5rem;
+  /* margin-top: -0.5rem; */
 }
 
 /* ====================== For the admin dashboard page ============================ */
@@ -276,6 +281,9 @@ textarea:focus {
   font-size: 0.75rem;
   font-weight: 600;
   font-family: "Handlee";
+  position: absolute;
+  top: 9rem;
+  left: 2rem;
 }
 .cardAuthor {
   color: rgb(137, 137, 137);

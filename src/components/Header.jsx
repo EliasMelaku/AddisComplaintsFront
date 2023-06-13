@@ -1,7 +1,15 @@
+import axios from "axios";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const logout = () => {
+    axios
+      .post("/auth/logout")
+      .then((res) => alert("Logged Out"))
+      .catch((err) => alert("Error Logging out"));
+  };
+
   const navigate = useNavigate();
   return (
     <div>
@@ -19,6 +27,7 @@ const Header = () => {
         className="logout"
         style={{ fontWeight: "bold", cursor: "pointer" }}
         onClick={() => {
+          logout();
           navigate("/login");
         }}
       >

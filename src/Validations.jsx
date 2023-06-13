@@ -9,7 +9,7 @@ export const userSchema = yup.object().shape({
     .required("Name is required"),
   email: yup
     .string()
-    .matches(/^[a-zA-Z0-9]+@[a-zA-Z0-9]+.[a-zA-Z0-9]+$/, {
+    .matches(/^[a-zA-Z0-9.]+@[a-zA-Z0-9]+.[a-zA-Z0-9]+$/, {
       message: "Please Input a valid Email",
     })
     .required("Email is required"),

@@ -100,7 +100,7 @@ const Dashboard = () => {
           {data.map((feedback, index) => (
             <div className="feedbackCard">
               <div className="cardTop">
-                <h2 className="cardTitle">{feedback.title}</h2>
+                {/* <h2 className="cardTitle">{feedback.title}</h2> */}
                 <div
                   style={{
                     display: "flex",

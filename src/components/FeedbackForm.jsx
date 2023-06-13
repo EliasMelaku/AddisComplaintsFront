@@ -61,31 +61,43 @@ const FeedbackForm = ({ edit, id }) => {
           });
         }
       }
-      formData.append("text", comment);
+      formData.append("name", localStorage.getItem("name"));
+      formData.append("email", localStorage.getItem("email"));
+      formData.append("comment", comment);
       // const formData = new FormData();
-      // axios
-      //   .post("/feedback/create", formData, {
-      //     headers: {
-      //       "Content-Type": "multipart/form-data",
-      //     },
-      //   })
-      //   .then((res) => {
-      //     alert(res);
-      //   })
-      //   .catch((err) => console.log(err));
+      axios
+        .post("/feedback/create", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          toast.success("Feedback Submitted", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+          navigate("/dashboard");
+        })
+        .catch((err) => console.log(err));
       for (const value of formData.values()) {
         console.log(value);
       }
-      toast.success("Here", {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
+      // toast.success("Feedback Submitted", {
+      //   position: "top-center",
+      //   autoClose: 5000,
+      //   hideProgressBar: false,
+      //   closeOnClick: true,
+      //   pauseOnHover: true,
+      //   draggable: true,
+      //   progress: undefined,
+      //   theme: "colored",
+      // });
     } else if (comment === "") {
       toast.error("Comment is required", {
         position: "top-center",
@@ -146,14 +158,14 @@ const FeedbackForm = ({ edit, id }) => {
               value={localStorage.getItem("email")}
               disabled={true}
             />
-            <label htmlFor="title">Title: </label>
+            {/* <label htmlFor="title">Title: </label>
             <input
               type="text"
               id="title"
               name="title"
               placeholder="Short Title Describing the comment"
               defaultValue={edit === true ? data.title : ""}
-            />
+            /> */}
             <label htmlFor="comment">Comment: </label>
             <textarea
               style={{ resize: "none", border: "none", marginTop: "0.25rem" }}
