@@ -1,13 +1,14 @@
 import axios from "axios";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Header = () => {
   const logout = () => {
     axios
       .post("/auth/logout")
-      .then((res) => alert("Logged Out"))
-      .catch((err) => alert("Error Logging out"));
+      .then((res) => toast.success("Logged Out", { autoClose: 2000 }))
+      .catch((err) => toast.error("Error Logging out", { autoClose: 3000 }));
   };
 
   const navigate = useNavigate();
