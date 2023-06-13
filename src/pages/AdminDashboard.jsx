@@ -7,6 +7,7 @@ import { LoginContext } from "../LoginContext";
 import axios from "axios";
 import { Box, Tab, Tabs, Typography } from "@mui/material";
 import UsersTable from "../components/UsersTable";
+import FeedbacksTable from "../components/FeedbacksTable";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -79,7 +80,7 @@ const AdminDashboard = () => {
             <UsersTable />
           </TabPanel>
           <TabPanel value={value} index={1}>
-            Item Two
+            <FeedbacksTable />
           </TabPanel>
         </Box>
       </div>
