@@ -122,7 +122,9 @@ const Dashboard = () => {
             </div>
             <p className="cardComment">{feedback.comment}</p>
             <p className="cardPdfLink">
-              {feedback.pdf.split("~~")[0] || "No Pdf Uploaded"}
+              {feedback.pdf !== null
+                ? feedback.pdf.split("~~")[0]
+                : "No Pdf Uploaded"}
             </p>
           </div>
         ))}
