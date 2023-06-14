@@ -87,6 +87,20 @@ function App() {
         transition={Zoom}
       />
     </BrowserRouter>
+    // <div>
+    //   <input type="text"></input>
+    //   <input type="text" name="_csrf" value={csrfToken}></input>
+    //   <input
+    //     type="button"
+    //     value={"Send"}
+    //     onClick={() => {
+    //       axios
+    //         .post("/feedback/process")
+    //         .then((res) => console.log(res))
+    //         .catch((err) => console.log(err));
+    //     }}
+    //   ></input>
+    // </div>
   );
 }
 

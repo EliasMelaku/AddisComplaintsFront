@@ -27,17 +27,9 @@ const columns = [
     minWidth: 200,
   },
   {
-    id: "pdf",
+    id: "",
     label: "File",
     minWidth: 100,
-    format: (value) =>
-      value ? (
-        <IconButton href={value}>
-          <DownloadForOfflineIcon />
-        </IconButton>
-      ) : (
-        "No File"
-      ),
   },
 ];
 
@@ -76,6 +68,15 @@ export default function FeedbacksTable() {
         console.log(err);
       });
   };
+  // const downloadPdf = (id) => {
+  //   axios
+  //     .get(`/feedback/file/${id}`)
+  //     .then((res) => toast.success("File Downloading", { autoClose: 1000 }))
+  //     .catch((err) => {
+  //       toast.error("Something Went Wrong", { autoClose: 1000 });
+  //       console.log(err);
+  //     });
+  // };
 
   React.useEffect(() => {
     fetchFeedbacks();
@@ -121,6 +122,18 @@ export default function FeedbacksTable() {
                           </TableCell>
                         );
                       })}
+
+                      <TableCell>
+                        {row.pdf ? (
+                          <IconButton
+                            href={`http://localhost:8080/api/feedback/file/${row.id}`}
+                          >
+                            <DownloadForOfflineIcon />
+                          </IconButton>
+                        ) : (
+                          "No File"
+                        )}
+                      </TableCell>
                     </StyledTableRow>
                   );
                 })}

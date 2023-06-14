@@ -31,7 +31,7 @@ const FeedbackForm = ({ edit }) => {
   const [comment, setComment] = useState("");
 
   useEffect(() => {
-    console.log(id);
+    // console.log(id);
     if (edit === true) {
       const body = {
         id: id,
@@ -41,13 +41,33 @@ const FeedbackForm = ({ edit }) => {
         .post("/feedback/single", body)
         .then((response) => {
           // console.log(response.data.comment);
+
+          console.log("response");
           setSelectedFile(response.data.pdf);
           setComment(response.data.comment);
         })
         .catch((err) => console.log(err));
     }
   }, []);
+  useEffect(() => {
+    axios
+      .get("/feedback/csrf-token")
+      .then((response) => {
+        // console.log(response);
+        // token = document
+        //   .querySelector('meta[name="csrf-token"]')
+        //   .getAttribute("content");
+        // setCsrfToken(document.cookie._csrf);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
+  const clearAntiCsrf = () => {
+    axios
+      .post("/feedback/clear")
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+  };
   const editFeedback = () => {
     if (comment !== "") {
       // alert(selectedFile.endsWith(".pdf"));
@@ -90,6 +110,7 @@ const FeedbackForm = ({ edit }) => {
             progress: undefined,
             theme: "colored",
           });
+          clearAntiCsrf();
           navigate("/dashboard");
         })
         .catch((err) => console.log(err));
@@ -171,6 +192,7 @@ const FeedbackForm = ({ edit }) => {
             progress: undefined,
             theme: "colored",
           });
+          clearAntiCsrf();
           navigate("/dashboard");
         })
         .catch((err) => console.log(err));

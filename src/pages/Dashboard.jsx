@@ -27,7 +27,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   const [data, setData] = useState([]);
-
+  const [user, _] = useContext(LoginContext);
   // const [loggedInUser, setLoggedInUser] = useState("");
   const [somethingDeleted, setSomethingDeleted] = useState(false);
 
@@ -47,19 +47,25 @@ const Dashboard = () => {
 
   useEffect(() => {
     getFeedback();
-  }, []);
+  }, [somethingDeleted]);
 
-  const handleDelete = () => {
-    toast.error("Feedback Deleted", {
-      position: "top-center",
-      autoClose: 2500,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-    });
+  const handleDelete = (id) => {
+    axios
+      .delete(`/feedback/${id}`)
+      .then((res) => {
+        toast.warning("Feedback Deleted", {
+          position: "top-center",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+        setSomethingDeleted(!somethingDeleted);
+      })
+      .catch((err) => console.log(err));
   };
 
   let whatToRender;
@@ -111,7 +117,9 @@ const Dashboard = () => {
     <div className="background authBackground">
       <Header />
       <div className="userSection">
-        <p>Hi, {localStorage.getItem("name")}</p>
+        <p style={{ marginRight: "1rem", fontWeight: "bold" }}>
+          Hi, {user.name}
+        </p>
         <input
           type="submit"
           value="+ Submit Feedback"
