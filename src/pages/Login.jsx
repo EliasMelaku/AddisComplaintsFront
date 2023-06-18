@@ -21,10 +21,11 @@ const Login = () => {
   const navigate = useNavigate();
   const [user, setUser] = useContext(LoginContext);
 
-  const captchaRef = useRef(null);
+  // const captchaRef = useRef(null);
 
   function tryLogin(event) {
-    const token = captchaRef.current.getValue();
+    // const token = captchaRef.current.getValue();
+    const token = "1";
     if (token === "") {
       toast.error("Please perform Captcha", {
         position: "top-center",
@@ -40,7 +41,7 @@ const Login = () => {
       const data = {
         email: event.email,
         password: event.password,
-        token: token,
+        // token: token,
       };
       // console.log(data);
       axios
@@ -65,7 +66,7 @@ const Login = () => {
             theme: "colored",
           })
         );
-      captchaRef.current.reset();
+      // captchaRef.current.reset();
     }
   }
 
@@ -107,11 +108,11 @@ const Login = () => {
             className="submitBtn"
             style={{ marginBottom: "0.5rem" }}
           />
-          <ReCAPTCHA
+          {/* <ReCAPTCHA
             sitekey={process.env.REACT_APP_ReCAPTCHA_SITE_KEY}
             ref={captchaRef}
             aria-required={true}
-          />
+          /> */}
           <p>
             Don't have an account?{" "}
             <a

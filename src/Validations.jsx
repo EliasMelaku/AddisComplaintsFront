@@ -16,8 +16,12 @@ export const userSchema = yup.object().shape({
   password: yup
     .string()
     .required("Password is required")
-    .min(4, "Password should be at least 4 characters.")
-    .max(16, "Password should be at most 16 characters."),
+    .matches(
+      /^(?:(?=.*[a-z])(?:(?=.*[A-Z])(?=.*[\d\W])|(?=.*\W)(?=.*\d))|(?=.*\W)(?=.*[A-Z])(?=.*\d)).{8,}$/,
+      "Must Contain combination of alphanumeric characters and symbols and must be at least 8 characters long"
+    )
+    .min(8, "Password should be at least 8 characters.")
+    .max(24, "Password should be at most 24 characters."),
   cPassword: yup
     .string()
     .oneOf([yup.ref("password"), null], "Passwords Don't Match")
